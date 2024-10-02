@@ -22,6 +22,7 @@ public class Fecha {
         return mes;
     }
 
+    @Override
     public String toString() {
         return this.dia + "/" + this.mes;
     }
