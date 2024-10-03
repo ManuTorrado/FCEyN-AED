@@ -11,7 +11,8 @@ public class Fecha {
     }
 
     public Fecha(Fecha fecha) {
-
+        this.mes = fecha.mes;
+        this.dia = fecha.dia;
     }
 
     public Integer dia() {
@@ -42,11 +43,12 @@ public class Fecha {
         int diaSumado = this.dia + 1;
         int diaFinal = diasEnMes(this.mes);
         if (diaSumado > diaFinal) {
-            this.mes++;
             this.dia = 1;
             if (this.mes == 12) {
                 this.mes = 1;
+                return;
             }
+            this.mes++;
             return;
         }
         this.dia++;
