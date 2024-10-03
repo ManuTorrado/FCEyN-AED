@@ -39,8 +39,8 @@ public class Recordatorio {
         if (mismaClase && !otroEsNull) {
             Recordatorio otroRecordatorio = (Recordatorio) otro;
             boolean mismoMensaje = otroRecordatorio.mensaje == this.mensaje;
-            boolean mismaFecha = otroRecordatorio.fecha == this.fecha;
-            boolean mismoHorario = otroRecordatorio.horario == this.horario;
+            boolean mismaFecha = this.fecha.equals(otroRecordatorio.fecha);
+            boolean mismoHorario = this.horario.equals(otroRecordatorio.horario);
 
             return mismoMensaje && mismaFecha && mismoHorario;
         }
