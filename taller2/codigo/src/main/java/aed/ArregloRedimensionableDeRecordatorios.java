@@ -5,7 +5,6 @@ class ArregloRedimensionableDeRecordatorios {
     private Recordatorio[] elementos;
 
     public ArregloRedimensionableDeRecordatorios() {
-        // Implementar
         this.elementos = new Recordatorio[0];
     }
 
@@ -14,6 +13,7 @@ class ArregloRedimensionableDeRecordatorios {
     }
 
     public void agregarAtras(Recordatorio i) {
+
         Recordatorio[] listaExtendida = new Recordatorio[this.elementos.length + 1];
 
         for (int j = 0; j < this.elementos.length; j++) {

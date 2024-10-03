@@ -10,6 +10,7 @@ public class Recordatorio {
         this.mensaje = mensaje;
         this.fecha = new Fecha(fecha); // Evito el aliasign
         this.horario = horario;
+
     }
 
     public Horario horario() {
