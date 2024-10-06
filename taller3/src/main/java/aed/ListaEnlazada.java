@@ -26,10 +26,6 @@ public class ListaEnlazada<T> implements Secuencia<T> {
             return this.prev;
         }
 
-        public T GetElement() {
-            return this.element;
-        }
-
         public void SetNext(Nodo next) {
             this.next = next;
         }
@@ -193,7 +189,7 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     private class ListaIterador implements Iterador<T> {
-        // Completar atributos privados{
+
         private int pos = 0;
 
         public boolean haySiguiente() {
@@ -207,8 +203,9 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         public T siguiente() {
 
             if (haySiguiente()) {
+                int posicion = this.pos;
                 this.pos++;
-                return obtener(pos);
+                return obtener(posicion);
             }
             return null;
         }
