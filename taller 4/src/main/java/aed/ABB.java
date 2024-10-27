@@ -38,8 +38,10 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     public T minimo() {
         Nodo root = this.raiz;
         while (root.izq != null) {
+
             root = root.izq;
         }
+
         return root.valor;
 
     }
@@ -47,11 +49,23 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     public T maximo() {
 
         Nodo root = this.raiz;
+
         while (root.der != null) {
+
             root = root.der;
+
         }
 
         return root.valor;
+
+    }
+
+    private Nodo nodoMinimo() {
+        Nodo root = this.raiz;
+        while (root.izq != null) {
+            root = root.izq;
+        }
+        return root;
 
     }
 
@@ -99,26 +113,22 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
 
     private Nodo sucesor(Nodo nodo) {
+        // caso tiene subarbol derecho
         Nodo res;
-
-        // Caso 1: Si tiene subárbol derecho, el sucesor es el menor en ese subárbol
         if (nodo.der != null) {
             res = nodo.der;
-            // Busca el nodo más a la izquierda del subárbol derecho
             while (res.izq != null) {
                 res = res.izq;
             }
         } else {
-            // Caso 2: Si no tiene subárbol derecho, subir al padre hasta que el nodo sea
-            // hijo izquierdo
-            Nodo hijo = nodo;
+            // caso contrario: no tiene subarbol derecho
+            // el siguiente es el primer padre de un subarbol izquierdo
+
             res = nodo.padre;
-            while (res != null && res.der == hijo) {
-                hijo = res;
+            while (res != null && res.der != null && res.der.valor.equals(nodo.valor)) {
                 res = res.padre;
             }
         }
-
         return res;
     }
 
@@ -133,6 +143,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         Nodo Root = this.raiz;
         while (Root != null) {
             camino = elem.compareTo(Root.valor);
+
             if (Root.valor.equals(elem))
                 return true;
             if (camino < 0) {
@@ -144,114 +155,118 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         return false;
     }
 
-    private boolean esRaiz(Nodo n) {
-        return (this.raiz == n);
+    public String toString() {
+
+        if (this.raiz == null) {
+            return "{}";
+        }
+        ABB_Iterador it = new ABB_Iterador();
+
+        if (!it.haySiguiente()) {
+            return "{" + this.raiz.valor + "}";
+        }
+
+        String res = "{";
+
+        Boolean primeraIteracion = true;
+        while (it.haySiguiente()) {
+
+            if (primeraIteracion) {
+                res += it.siguiente();
+
+                primeraIteracion = false;
+                continue;
+            }
+
+            res += "," + it.siguiente();
+
+        }
+
+        res += "," + maximo() + "}";
+
+        return res;
     }
 
     public void eliminar(T elem) {
+        // Eliminacion recursiva, comienzo desde la raiz hasta llegar al elemento (si es
+        // que se encuentra, de lo contrario, queda que raiz = raiz)
+        this.raiz = eliminacionRecursiva(raiz, elem);
 
-        int camino;
-        Nodo Root = this.raiz;
-        while (Root != null) {
-            camino = elem.compareTo(Root.valor);
-            if (Root.valor.equals(elem)) {
+    }
 
-                Nodo padre = Root.padre;
+    private Nodo eliminacionRecursiva(Nodo NodoActual, T elem) {
 
-                // Caso sin descendencia
-                if (Root.izq == null && Root.der == null) {
-                    Root = null;
-                }
-
-                // Caso 2 hijos
-                if (Root.izq != null && Root.der != null) {
-                    Nodo suc = sucesor(Root);
-                    if (esRaiz(Root)) {
-                        this.raiz = suc;
-                        this.raiz.izq = Root.izq;
-                        this.raiz.der = Root.der;
-                        this.cardinal--;
-                        return;
-                    }
-
-                    // Redirecciono los hijos al padre
-
-                    if (padre.izq == Root) {
-                        padre.izq = suc;
-                        suc.padre = padre;
-                    }
-                    if (padre.der == Root) {
-                        padre.der = suc;
-                        suc.padre = padre;
-                    }
-                }
-
-                // Caso 1 hijo (derecha)
-                if (Root.der != null && Root.izq == null) {
-
-                    if (esRaiz(Root)) {
-                        Nodo suc = sucesor(Root);
-                        this.raiz = suc;
-                        this.raiz.der = Root.der;
-                        this.cardinal--;
-                        return;
-                    }
-
-                    Root = Root.der;
-                    if (padre.izq == Root) {
-                        padre.izq = Root;
-                    } else {
-                        padre.der = Root;
-                    }
-
-                }
-
-                // Caso 1 hijo (izquierda)
-                if (Root.izq != null && Root.der == null) {
-
-                    if (esRaiz(Root)) {
-                        Nodo suc = sucesor(Root);
-                        this.raiz = suc;
-                        this.raiz = Root.izq;
-                        this.cardinal--;
-                        return;
-                    }
-
-                    Root = Root.izq;
-                    if (padre.izq == Root) {
-                        padre.izq = Root;
-                    } else {
-                        padre.der = Root;
-                    }
-
-                }
-
-                this.cardinal--;
-                return;
-            }
-
-            if (camino < 0) {
-                Root = Root.izq;
-            } else {
-                Root = Root.der;
-            }
+        if (NodoActual == null) {
+            return null;
         }
 
+        // Recorro el arbol
+        if (elem.compareTo(NodoActual.valor) > 0) {
+            NodoActual.der = eliminacionRecursiva(NodoActual.der, elem);
+        } else if (elem.compareTo(NodoActual.valor) < 0) {
+            NodoActual.izq = eliminacionRecursiva(NodoActual.izq, elem);
+        } else { // Se encontro un elemento
+
+            // Caso sin hijos
+            if (NodoActual.izq == null && NodoActual.der == null) {
+
+                this.cardinal--;
+                return null;
+            } else if (NodoActual.izq == null) {
+                // Caso un hijo
+
+                this.cardinal--;
+                return NodoActual.der;
+            }
+            if (NodoActual.der == null) {
+                this.cardinal--;
+                return NodoActual.izq;
+            } else {
+
+                // Caso dos hijos
+
+                Nodo Sucesor = sucesor(NodoActual);
+                NodoActual.valor = Sucesor.valor;
+                NodoActual.der = eliminacionRecursiva(NodoActual.der, Sucesor.valor);
+            }
+
+        }
+        return NodoActual;
     }
 
     private class ABB_Iterador implements Iterador<T> {
         private Nodo _actual;
 
         public boolean haySiguiente() {
+            return !(this._actual.valor == maximo());
 
-            throw new UnsupportedOperationException("No implementada aun");
+        }
+
+        public ABB_Iterador() {
+            if (maximo() == null) {
+
+            }
+            this._actual = nodoMinimo();
         }
 
         @Override
         public T siguiente() {
 
-            throw new UnsupportedOperationException("Unimplemented method 'siguiente'");
+            if (haySiguiente()) {
+                T res = this._actual.valor;
+                this._actual = sucesor(this._actual);
+                return res;
+            }
+
+            if (this._actual.valor == maximo()) {
+                T res = this._actual.valor;
+                this._actual = null;
+                return res;
+            }
+
+            return null;
         }
+
     }
 
     public Iterador<T> iterador() {
