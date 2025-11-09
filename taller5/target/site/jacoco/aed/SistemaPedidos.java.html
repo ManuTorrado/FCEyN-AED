@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SistemaPedidos.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">labo4</a> &gt; <a href="index.source.html" class="el_package">aed</a> &gt; <span class="el_source">SistemaPedidos.java</span></div><h1>SistemaPedidos.java</h1><pre class="source lang-java linenums">package aed;
+
+public class SistemaPedidos {
+
+    private ListaEnlazada&lt;Pedido&gt; cola;
+
+    private ABB&lt;Pedido&gt; arbol;
+
+<span class="fc" id="L9">    public SistemaPedidos() {</span>
+<span class="fc" id="L10">        this.cola = new ListaEnlazada&lt;&gt;();</span>
+<span class="fc" id="L11">        this.arbol = new ABB&lt;&gt;();</span>
+<span class="fc" id="L12">    }</span>
+
+    public void agregarPedido(Pedido pedido) {
+
+<span class="fc" id="L16">        cola.agregarAtras(pedido);</span>
+
+<span class="fc" id="L18">        arbol.insertar(pedido);</span>
+<span class="fc" id="L19">    }</span>
+
+    public Pedido proximoPedido() {
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">        if (cola.longitud() == 0)</span>
+<span class="nc" id="L23">            return null;</span>
+
+<span class="fc" id="L25">        Pedido p = cola.obtener(0);</span>
+
+<span class="fc" id="L27">        arbol.eliminar(p);</span>
+
+<span class="fc" id="L29">        cola.eliminar(0);</span>
+<span class="fc" id="L30">        return p;</span>
+    }
+
+    public Pedido pedidoMenorId() {
+
+<span class="fc" id="L35">        return arbol.minimo();</span>
+
+    }
+
+    public String obtenerPedidosEnOrdenDeLlegada() {
+
+<span class="fc" id="L41">        return cola.toString();</span>
+    }
+
+    public String obtenerPedidosOrdenadosPorId() {
+<span class="fc" id="L45">        String res = &quot;{&quot;;</span>
+<span class="fc" id="L46">        ABB&lt;Pedido&gt;.ABB_Iterador it = arbol.iterador();</span>
+
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (it.haySiguiente()) {</span>
+<span class="fc" id="L49">            res = res + it.siguiente();</span>
+        }
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        while (it.haySiguiente()) {</span>
+<span class="fc" id="L53">            res = res + &quot;, &quot; + it.siguiente();</span>
+        }
+
+<span class="fc" id="L56">        res = res + &quot;}&quot;;</span>
+<span class="fc" id="L57">        return res;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

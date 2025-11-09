@@ -1,29 +1,59 @@
 package aed;
 
 public class SistemaPedidos {
-    /* COMPLETAR atributos privados: ¿cómo se representan los pedidos? */
 
-    public SistemaPedidos(){
-        throw new UnsupportedOperationException("No implementado aún");
+    private ListaEnlazada<Pedido> cola;
+
+    private ABB<Pedido> arbol;
+
+    public SistemaPedidos() {
+        this.cola = new ListaEnlazada<>();
+        this.arbol = new ABB<>();
     }
 
-    public void agregarPedido(Pedido pedido){
-        throw new UnsupportedOperationException("No implementado aún");
+    public void agregarPedido(Pedido pedido) {
+
+        cola.agregarAtras(pedido);
+
+        arbol.insertar(pedido);
     }
 
-    public Pedido proximoPedido(){
-        throw new UnsupportedOperationException("No implementado aún");
+    public Pedido proximoPedido() {
+        if (cola.longitud() == 0)
+            return null;
+
+        Pedido p = cola.obtener(0);
+
+        arbol.eliminar(p);
+
+        cola.eliminar(0);
+        return p;
     }
 
-    public Pedido pedidoMenorId(){
-        throw new UnsupportedOperationException("No implementado aún");
+    public Pedido pedidoMenorId() {
+
+        return arbol.minimo();
+
     }
 
-    public String obtenerPedidosEnOrdenDeLlegada(){
-        throw new UnsupportedOperationException("No implementado aún");
+    public String obtenerPedidosEnOrdenDeLlegada() {
+
+        return cola.toString();
     }
 
-    public String obtenerPedidosOrdenadosPorId(){
-        throw new UnsupportedOperationException("No implementado aún");
+    public String obtenerPedidosOrdenadosPorId() {
+        String res = "{";
+        ABB<Pedido>.ABB_Iterador it = arbol.iterador();
+
+        if (it.haySiguiente()) {
+            res = res + it.siguiente();
+        }
+
+        while (it.haySiguiente()) {
+            res = res + ", " + it.siguiente();
+        }
+
+        res = res + "}";
+        return res;
     }
 }

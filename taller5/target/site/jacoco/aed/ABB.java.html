@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ABB.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">labo4</a> &gt; <a href="index.source.html" class="el_package">aed</a> &gt; <span class="el_source">ABB.java</span></div><h1>ABB.java</h1><pre class="source lang-java linenums">package aed;
+
+import java.util.Stack;
+
+public class ABB&lt;T extends Comparable&lt;T&gt;&gt; {
+    private Nodo raiz;
+
+    private class Nodo {
+        private T value;
+        private Nodo left;
+        private Nodo right;
+
+<span class="fc" id="L13">        public Nodo(T value) {</span>
+<span class="fc" id="L14">            this.value = value;</span>
+<span class="fc" id="L15">            this.left = null;</span>
+<span class="fc" id="L16">            this.right = null;</span>
+<span class="fc" id="L17">        }</span>
+    }
+
+    public class HandleABB {
+        private Nodo referencia;
+
+<span class="fc" id="L23">        public HandleABB(Nodo referencia) {</span>
+<span class="fc" id="L24">            this.referencia = referencia;</span>
+<span class="fc" id="L25">        }</span>
+
+        public T valor() {
+<span class="fc" id="L28">            return referencia.value;</span>
+        }
+
+        public void eliminar() {
+<span class="fc" id="L32">            ABB.this.eliminar(referencia.value);</span>
+<span class="fc" id="L33">        }</span>
+
+    }
+
+<span class="fc" id="L37">    public ABB() {</span>
+<span class="fc" id="L38">        this.raiz = null;</span>
+<span class="fc" id="L39">    }</span>
+
+    public T maximo() {
+
+<span class="fc" id="L43">        Nodo actual = this.raiz;</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        while (actual.right != null) {</span>
+<span class="nc" id="L45">            actual = actual.right;</span>
+        }
+<span class="fc" id="L47">        return actual.value;</span>
+    }
+
+    public T minimo() {
+
+<span class="fc" id="L52">        Nodo actual = this.raiz;</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        while (actual.left != null) {</span>
+<span class="fc" id="L54">            actual = actual.left;</span>
+        }
+<span class="fc" id="L56">        return actual.value;</span>
+    }
+
+    public int cardinal() {
+<span class="fc" id="L60">        return contarNodos(raiz);</span>
+    }
+
+    private int contarNodos(Nodo n) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        if (n == null) {</span>
+<span class="fc" id="L65">            return 0;</span>
+        }
+<span class="fc" id="L67">        return 1 + contarNodos(n.left) + contarNodos(n.right);</span>
+    }
+
+    public HandleABB insertar(T elem) {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (raiz == null) {</span>
+<span class="fc" id="L72">            raiz = new Nodo(elem);</span>
+<span class="fc" id="L73">            return new HandleABB(raiz);</span>
+        }
+
+<span class="fc" id="L76">        Nodo actual = raiz;</span>
+<span class="fc" id="L77">        Nodo padre = null;</span>
+
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc" id="L80">            padre = actual;</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (elem.compareTo(actual.value) &lt; 0)</span>
+<span class="fc" id="L82">                actual = actual.left;</span>
+            else
+<span class="fc" id="L84">                actual = actual.right;</span>
+        }
+
+<span class="fc" id="L87">        Nodo nuevo = new Nodo(elem);</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (elem.compareTo(padre.value) &lt; 0)</span>
+<span class="fc" id="L89">            padre.left = nuevo;</span>
+        else
+<span class="fc" id="L91">            padre.right = nuevo;</span>
+
+<span class="fc" id="L93">        return new HandleABB(nuevo);</span>
+    }
+
+    public boolean pertenece(T elem) {
+<span class="fc" id="L97">        Nodo actual = raiz;</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        while (actual != null) {</span>
+<span class="fc" id="L99">            int cmp = elem.compareTo(actual.value);</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            if (cmp == 0)</span>
+<span class="fc" id="L101">                return true;</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            actual = (cmp &lt; 0) ? actual.left : actual.right;</span>
+        }
+<span class="fc" id="L104">        return false;</span>
+    }
+
+    /* eliminar, lo implemento con eliminacion recursiva */
+    public void eliminar(T elem) {
+<span class="fc" id="L109">        raiz = eliminarRec(raiz, elem);</span>
+<span class="fc" id="L110">    }</span>
+
+    private Nodo eliminarRec(Nodo nodo, T elem) {
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (nodo == null)</span>
+<span class="nc" id="L114">            return null;</span>
+
+<span class="fc" id="L116">        int compartor = elem.compareTo(nodo.value);</span>
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (compartor &lt; 0)</span>
+<span class="fc" id="L119">            nodo.left = eliminarRec(nodo.left, elem);</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        else if (compartor &gt; 0)</span>
+<span class="fc" id="L121">            nodo.right = eliminarRec(nodo.right, elem);</span>
+        else {
+            // caso 1: sin hijos
+<span class="fc bfc" id="L124" title="All 4 branches covered.">            if (nodo.left == null &amp;&amp; nodo.right == null)</span>
+<span class="fc" id="L125">                return null;</span>
+
+            // caso 2: un hijo
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            if (nodo.left == null)</span>
+<span class="fc" id="L129">                return nodo.right;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            if (nodo.right == null)</span>
+<span class="fc" id="L131">                return nodo.left;</span>
+
+            // caso 3: dos hijos se reemplaza por el minimo derecho
+<span class="fc" id="L134">            Nodo sucesor = nodo.right;</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">            while (sucesor.left != null)</span>
+<span class="nc" id="L136">                sucesor = sucesor.left;</span>
+<span class="fc" id="L137">            nodo.value = sucesor.value;</span>
+<span class="fc" id="L138">            nodo.right = eliminarRec(nodo.right, sucesor.value);</span>
+        }
+<span class="fc" id="L140">        return nodo;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L145">        String res = &quot;{&quot;;</span>
+<span class="nc" id="L146">        ABB_Iterador it = iterador();</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (it.haySiguiente()) {</span>
+<span class="nc" id="L149">            res = res + it.siguiente();</span>
+        }
+
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        while (it.haySiguiente()) {</span>
+<span class="nc" id="L153">            res = res + &quot;, &quot; + it.siguiente();</span>
+        }
+
+<span class="nc" id="L156">        res = res + &quot;}&quot;;</span>
+<span class="nc" id="L157">        return res;</span>
+    }
+
+    public class ABB_Iterador {
+<span class="fc" id="L161">        private Stack&lt;Nodo&gt; pila = new Stack&lt;&gt;();</span>
+
+<span class="fc" id="L163">        public ABB_Iterador() {</span>
+<span class="fc" id="L164">            Nodo actual = raiz;</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            while (actual != null) {</span>
+<span class="fc" id="L166">                pila.push(actual);</span>
+<span class="fc" id="L167">                actual = actual.left;</span>
+            }
+<span class="fc" id="L169">        }</span>
+
+        public boolean haySiguiente() {
+<span class="fc bfc" id="L172" title="All 2 branches covered.">            return !pila.isEmpty();</span>
+        }
+
+        public T siguiente() {
+<span class="fc" id="L176">            Nodo n = pila.pop();</span>
+<span class="fc" id="L177">            T valor = n.value;</span>
+
+<span class="fc" id="L179">            Nodo actual = n.right;</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">            while (actual != null) {</span>
+<span class="fc" id="L181">                pila.push(actual);</span>
+<span class="fc" id="L182">                actual = actual.left;</span>
+            }
+
+<span class="fc" id="L185">            return valor;</span>
+        }
+    }
+
+    public ABB_Iterador iterador() {
+<span class="fc" id="L190">        return new ABB_Iterador();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,72 +1,127 @@
 package aed;
 
 public class ListaEnlazada<T> {
-    // Completar atributos privados
 
     private class Nodo {
-        // Completar
+        T valor;
+        Nodo next;
+
+        Nodo(T v) {
+            valor = v;
+            next = null;
+        }
     }
 
+    private Nodo primero;
+    private int longitud;
+
     public ListaEnlazada() {
-        throw new UnsupportedOperationException("No implementada aun");
+        primero = null;
+        longitud = 0;
     }
 
     public int longitud() {
-        throw new UnsupportedOperationException("No implementada aun");
+        return longitud;
     }
 
     public void agregarAdelante(T elem) {
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo nuevo = new Nodo(elem);
+        nuevo.next = primero;
+        primero = nuevo;
+        longitud++;
     }
 
     public void agregarAtras(T elem) {
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo nuevo = new Nodo(elem);
+        if (primero == null) {
+            primero = nuevo;
+        } else {
+            Nodo actual = primero;
+            while (actual.next != null) {
+                actual = actual.next;
+            }
+            actual.next = nuevo;
+        }
+        longitud++;
+    }
+
+    private Nodo obtenerNodo(int i) {
+
+        Nodo actual = primero;
+        for (int k = 0; k < i; k++) {
+            actual = actual.next;
+        }
+        return actual;
     }
 
     public T obtener(int i) {
-        throw new UnsupportedOperationException("No implementada aun");
+        return obtenerNodo(i).valor;
     }
 
     public void eliminar(int i) {
-        throw new UnsupportedOperationException("No implementada aun");
+
+        if (i == 0) {
+            primero = primero.next;
+        } else {
+            Nodo anterior = obtenerNodo(i - 1);
+            anterior.next = anterior.next.next;
+        }
+
+        longitud--;
     }
 
-    public void modificarPosicion(int indice, T elem) {
-        throw new UnsupportedOperationException("No implementada aun");
+    public void modificarPosicion(int i, T elem) {
+        obtenerNodo(i).valor = elem;
     }
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
-        throw new UnsupportedOperationException("No implementada aun");
+
+        ListaIterador it = lista.iterador();
+        while (it.haySiguiente()) {
+            agregarAtras(it.siguiente());
+        }
     }
-    
+
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("No implementada aun");
+        String res = "[";
+        Nodo actual = primero;
+
+        if (actual != null) {
+            res = res + actual.valor;
+            actual = actual.next;
+        }
+
+        while (actual != null) {
+            res = res + ", " + actual.valor;
+            actual = actual.next;
+        }
+
+        res = res + "]";
+        return res;
     }
 
-    public class ListaIterador{
-    	// Completar atributos privados
+    public class ListaIterador {
+        private Nodo actual;
+
+        public ListaIterador() {
+            actual = primero;
+        }
 
         public boolean haySiguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
-        }
-        
-        public boolean hayAnterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            return actual != null;
         }
 
         public T siguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
-        }
-        
 
-        public T anterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            T valor = actual.valor;
+            actual = actual.next;
+            return valor;
         }
+
     }
 
     public ListaIterador iterador() {
-	    throw new UnsupportedOperationException("No implementada aun");
+        return new ListaIterador();
     }
-
 }
